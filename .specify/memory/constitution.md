@@ -1,50 +1,119 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+  同步影响报告
+  ==================
+  版本变更: 1.0.0 → 1.1.0（MINOR — 新增语言规则章节）
 
-## Core Principles
+  修改的原则: 无
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+  新增章节:
+  - 语言规则（所有内容和回答必须使用中文）
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+  删除章节: 无
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+  模板更新:
+  - .specify/templates/plan-template.md — ⚠ 待定（语言规则在执行时应用）
+  - .specify/templates/spec-template.md — ⚠ 待定（语言规则在执行时应用）
+  - .specify/templates/tasks-template.md — ⚠ 待定（语言规则在执行时应用）
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+  后续待办: 无
+-->
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+# Playloft 项目宪章
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## 核心原则
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### 一、原子化知识
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+每条知识条目必须只对应一个问题、一个概念或一个解决方案。
+禁止在同一文档中混合多个不相关的主题。
+这样做是为了确保每条知识都能被独立发现和引用。
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### 二、结论优先
 
-## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+条目必须以结论、解决方案或关键要点开头。
+对话过程、探索步骤等细节应当省略，除非它们对理解结论
+不可或缺。目标是快速获取可操作的知识，而不是还原对话
+过程。
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+### 三、结构化 Markdown
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+所有知识条目必须使用规范的 Markdown 格式编写，包含：
+清晰的标题、元数据（标签、日期、来源）以及组织良好的
+正文内容。未经格式化的自由文本禁止提交到 `notes/` 目录。
+
+### 四、禁止重复
+
+创建新条目前，必须先确认是否已有相同主题的条目存在。
+如果已有条目部分重叠，必须更新已有条目而非新建。
+去重的优先级高于录入速度。
+
+### 五、可检索设计
+
+每条知识必须包含标签、描述性标题和足够的元数据，以支持
+全文搜索和标签检索。缺少标签或标题含糊的条目必须在从
+`inbox/` 移入 `notes/` 之前完成修订。
+
+## 语言规则
+
+所有知识条目、规格文档、计划文档、任务列表以及 AI 助手
+的回答必须使用**中文**编写。
+
+以下情况例外，允许使用英文：
+- 专有技术术语（如 Markdown、API、OAuth2）
+- 代码片段和命令行示例
+- 文件名和路径
+- Git 分支名和 commit message
+
+此规则适用于本项目中所有由人或 AI 产出的文档内容。
+
+## 知识结构与工作流
+
+### 文件结构
+
+- `inbox/` — 原始对话记录、未加工的笔记、等待整理的草稿。
+- `notes/` — 最终的结构化知识条目，已通过所有质量关卡
+  （原子化、结论优先、结构化、已标签）。
+
+### 工作流
+
+1. **捕获**：将 AI 对话摘录或快速笔记存入 `inbox/`。
+   此阶段允许最小化格式。
+2. **提炼**：提取有价值的结论或解决方案，去除对话噪音，
+   应用结构化 Markdown 格式。
+3. **归档**：将整理好的条目从 `inbox/` 移入 `notes/` 的
+   对应分类下，确认标签、标题和元数据完整。
+
+### 分类规则
+
+`notes/` 中的条目必须至少包含以下一个分类标签（允许多标签）：
+
+- **AI** — 提示词技巧、模型行为、AI 工具链
+- **Security** — 漏洞、加固、认证、网络安全
+- **Programming** — 语言、框架、算法、调试
+
+随着知识库增长可以引入新标签，但每个新标签必须通过宪章
+修订记录在本节中。
+
+## 记录标准
+
+当 AI 对话或信息满足以下任一条件时，必须记录：
+
+- **通用价值**：该知识适用范围超出当前对话场景，对未来的
+  自己或更广泛的受众有帮助。
+- **可复用**：该解决方案、模式或技巧很可能在类似场景中
+  再次用到。
+- **有明确结论**：对话产生了清晰、经过验证的答案或解决
+  方案，而非猜测或不完整的线索。
+
+不满足以上任何条件的对话不应记录，以避免噪音和维护负担。
+
+## 治理
+
+- 本宪章是知识库所有贡献的权威指南，所有条目必须遵守
+  上述原则。
+- 修订要求：（1）变更说明，（2）遵循语义化版本号递增，
+  （3）更新本文件顶部的同步影响报告。
+- 将条目从 `inbox/` 归档到 `notes/` 时应进行合规审查，
+  逐一检查是否符合五条核心原则。
+
+**版本**: 1.1.0 | **批准日期**: 2026-04-15 | **最后修订**: 2026-04-15
