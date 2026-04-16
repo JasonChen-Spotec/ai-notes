@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vitepress dev notes",
     "build": "vitepress build notes",
-    "preview": "vitepress preview notes"
+    "preview": "vitepress preview notes",
+    "deploy": "git add -A && git commit -m 'docs: update knowledge base' && git push origin main"
   },
   "keywords": [],
   "author": "",

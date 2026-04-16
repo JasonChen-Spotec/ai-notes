@@ -4,6 +4,7 @@ export default defineConfig({
   title: '知识库',
   description: 'AI 对话知识归档',
   lang: 'zh-CN',
+  base: '/ai-notes/',
 
   themeConfig: {
     nav: [
