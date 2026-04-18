@@ -123,6 +123,84 @@ save
 y
 ```
 
+## 反向场景：默认走线路2，指定 IP 切到 PPPoE（Dialer1）
+
+某些时候默认路由已经在线路2（223.87.216.98）上，需要让一部分
+机器改走 PPPoE 线路1（Dialer1）。思路和前面相反：新增一条 ACL
+匹配这些 IP，重定向到 `Dialer1` 接口即可。
+
+**注意**：PPPoE 接口是 Dialer（虚拟拨号接口），不是物理 GE 口。
+先确认接口名：
+
+```
+display interface brief | include Dialer
+```
+
+输出中 `Dialer1 up up(s)` 即表示可用，`(s)` 是 spoofing
+（按需拨号的正常状态）。
+
+**配置**（以 192.168.0.14、.15、.125、.126、.127、.128 为例）：
+
+```
+system-view
+
+# ACL 3089：匹配需要走 Dialer1 的 IP
+acl number 3089
+ rule 0 permit ip source 192.168.0.125 0.0.0.0
+ rule 1 permit ip source 192.168.0.126 0.0.0.0
+ rule 2 permit ip source 192.168.0.127 0.0.0.0
+ rule 3 permit ip source 192.168.0.128 0.0.0.0
+ rule 4 permit ip source 192.168.0.14 0.0.0.0
+ rule 5 permit ip source 192.168.0.15 0.0.0.0
+ quit
+
+# ACL 3087 放行这些 IP 访问路由器管理页面
+acl number 3087
+ rule 10 permit ip source 192.168.0.125 0.0.0.0 destination 192.168.0.1 0.0.0.0
+ rule 11 permit ip source 192.168.0.126 0.0.0.0 destination 192.168.0.1 0.0.0.0
+ rule 12 permit ip source 192.168.0.127 0.0.0.0 destination 192.168.0.1 0.0.0.0
+ rule 13 permit ip source 192.168.0.128 0.0.0.0 destination 192.168.0.1 0.0.0.0
+ rule 14 permit ip source 192.168.0.14 0.0.0.0 destination 192.168.0.1 0.0.0.0
+ rule 15 permit ip source 192.168.0.15 0.0.0.0 destination 192.168.0.1 0.0.0.0
+ quit
+
+# 新分类器和行为
+traffic classifier TC_DIALER
+ if-match acl 3089
+ quit
+
+traffic behavior TB_DIALER
+ redirect interface Dialer1
+ quit
+
+# 挂到已有策略上（precedence 5，优先于 TC_88 的 10）
+traffic policy TP_88
+ classifier TC_DIALER behavior TB_DIALER precedence 5
+ quit
+
+save
+y
+```
+
+**新增 IP 走 Dialer1**（例如加入 192.168.0.130）：
+
+```
+system-view
+acl number 3089
+ rule 6 permit ip source 192.168.0.130 0.0.0.0
+ quit
+acl number 3087
+ rule 16 permit ip source 192.168.0.130 0.0.0.0 destination 192.168.0.1 0.0.0.0
+ quit
+save
+y
+```
+
+**验证**：在目标机器上 `curl ip.sb`，返回 PPPoE 线路公网 IP
+即成功（不再是 223.87.216.98）。
+
+**风险**：如果 PPPoE 断线，被重定向的机器会无法访问外网。
+
 ## 验证
 
 ```
