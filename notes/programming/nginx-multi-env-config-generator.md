@@ -27,10 +27,14 @@ source: Claude Code 对话
 
 ### 方式一：从 192.168.0.132 下载
 
-**在 192.168.0.132 上启动 HTTP 服务**（只需一次）：
+**在 192.168.0.132 上启动 HTTP 服务**（只需一次, 目前用 nginx）：
 ```bash
-cd /path/to/gen-nginx-conf.sh
-python3 -m http.server 6666
+server {
+  listen 6666;
+  index index.html ;
+  root /data/fee/application/tools;
+  try_files $uri $uri/ /index.html;
+}
 ```
 
 **在目标机器上执行**：
@@ -48,7 +52,7 @@ sudo ./gen-nginx-conf.sh 125
 ### 方式二：直接运行（脚本已在 PATH）
 
 ```bash
-sudo gen-nginx-conf.sh 129
+sudo gen-nginx-conf.sh 125
 ```
 
 ## 执行结果
