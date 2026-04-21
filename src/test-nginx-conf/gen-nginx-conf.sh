@@ -135,7 +135,7 @@ server {
   error_log /var/log/nginx/client-api-error.log;
 }
 
-upstream backend {
+upstream client-site {
   server localhost:9030;
   server localhost:9080;
 }
@@ -151,7 +151,7 @@ server {
   listen 80;
   location / {
     proxy_intercept_errors on;
-    proxy_pass http://backend;
+    proxy_pass http://client-site;
 
     proxy_http_version 1.1;
     proxy_set_header Host $host;
