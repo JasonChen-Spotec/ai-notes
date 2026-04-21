@@ -69,6 +69,61 @@ sudo ufw allow 53/tcp
 sudo ufw allow 53/udp
 ```
 
+## 修改配置后重启生效
+
+每次修改 `/etc/dnsmasq.d/local.conf` 后需要重启 dnsmasq：
+
+```bash
+sudo systemctl restart dnsmasq
+
+# 确认服务正常运行
+sudo systemctl status dnsmasq
+```
+
+## 用 nslookup 验证 DNS 解析
+
+### 指定 DNS 服务器查询（最准确，不依赖本机 DNS 设置）
+
+```bash
+nslookup <域名> 192.168.0.127
+
+# 例：
+nslookup crm.test129.net 192.168.0.127
+nslookup www.spotec14.net 192.168.0.127
+nslookup ib.spotec14.net 192.168.0.127
+```
+
+正常输出示例：
+```
+Server:     192.168.0.127
+Address:    192.168.0.127#53
+
+Name:   www.spotec14.net
+Address: 192.168.0.14
+```
+
+### 查看本机当前使用的 DNS
+
+```bash
+# macOS
+scutil --dns | grep "nameserver\[0\]"
+
+# Linux
+cat /etc/resolv.conf
+```
+
+### 注意：nslookup 能通但 curl/ping 域名不通
+
+如果 `nslookup 域名 192.168.0.127` 能解析，但 `curl http://域名` 报 `Could not resolve host`，
+说明**本机系统 DNS 没有指向 192.168.0.127**，解析走的是默认 DNS。
+
+**解决方法**：
+
+- **macOS**：系统设置 → Wi-Fi → 详细信息 → DNS → 添加 `192.168.0.127`
+- **Linux**：修改 `/etc/resolv.conf`，写入 `nameserver 192.168.0.127`
+- **路由器 DHCP 方式**（推荐）：路由器 DHCP 设置 → DNS 服务器 → 填入 `192.168.0.127`，
+  内网设备重新获取 IP 后自动生效（断开重连或等 DHCP 续租）
+
 ## 验证
 
 ```bash
