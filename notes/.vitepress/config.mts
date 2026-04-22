@@ -23,6 +23,7 @@ export default defineConfig({
             { text: '华为路由器 MQC 策略路由', link: '/programming/huawei-vrp-policy-route' },
             { text: 'Nginx 指定 API 不记录日志', link: '/programming/nginx-disable-log-for-specific-api' },
             { text: 'Nginx 多环境配置生成器', link: '/programming/nginx-multi-env-config-generator' },
+            { text: 'Shadowsocks 客户端（Ubuntu）', link: '/programming/shadowsocks-ubuntu-client' },
           ]
         }
       ],
