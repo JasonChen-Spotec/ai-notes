@@ -93,35 +93,25 @@ y
 
 ## 新增 IP
 
-只需在 ACL 里加规则，流策略自动生效。以下是新增 192.168.0.240 的实际操作：
+只需在 ACL 里加规则，流策略自动生效。**省略 rule 编号**，系统按步长自动递增，
+无需手动计算下一个编号：
 
 ```
 system-view
 acl number 3088
- rule 2 permit ip source 192.168.0.240 0.0.0.0
+ rule permit ip source 192.168.0.xxx 0.0.0.0
  quit
 
 acl number 3087
- rule 2 permit ip source 192.168.0.240 0.0.0.0 destination 192.168.0.1 0.0.0.0
+ rule permit ip source 192.168.0.xxx 0.0.0.0 destination 192.168.0.1 0.0.0.0
  quit
 
 save
 y
 ```
 
-如需继续新增其他 IP，按同样方式追加 rule（编号递增即可）：
-
-```
-system-view
-acl number 3088
- rule 3 permit ip source 192.168.0.xxx 0.0.0.0
- quit
-acl number 3087
- rule 3 permit ip source 192.168.0.xxx 0.0.0.0 destination 192.168.0.1 0.0.0.0
- quit
-save
-y
-```
+> **说明**：ACL 默认步长为 5（可用 `display acl 3088` 确认 `Acl's step is 5`），
+> 省略编号时系统自动取当前最大编号 + 步长，无需关心具体数字。
 
 ## 反向场景：默认走线路2，指定 IP 切到 PPPoE（Dialer1）
 
@@ -182,15 +172,15 @@ save
 y
 ```
 
-**新增 IP 走 Dialer1**（例如加入 192.168.0.130）：
+**新增 IP 走 Dialer1**（省略 rule 编号，自动递增）：
 
 ```
 system-view
 acl number 3089
- rule 6 permit ip source 192.168.0.130 0.0.0.0
+ rule permit ip source 192.168.0.xxx 0.0.0.0
  quit
 acl number 3087
- rule 16 permit ip source 192.168.0.130 0.0.0.0 destination 192.168.0.1 0.0.0.0
+ rule permit ip source 192.168.0.xxx 0.0.0.0 destination 192.168.0.1 0.0.0.0
  quit
 save
 y
