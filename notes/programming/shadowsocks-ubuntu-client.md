@@ -44,6 +44,9 @@ sudo nano /etc/shadowsocks-libev/config.json
 ```bash
 # 前台运行（测试用）
 ss-local -c /etc/shadowsocks-libev/config.json
+
+# 后台服务
+sudo systemctl start shadowsocks-libev-local@config
 ```
 
 正常输出：
