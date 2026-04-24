@@ -24,6 +24,7 @@ export default defineConfig({
             { text: 'Nginx 指定 API 不记录日志', link: '/programming/nginx-disable-log-for-specific-api' },
             { text: 'Nginx 多环境配置生成器', link: '/programming/nginx-multi-env-config-generator' },
             { text: 'Shadowsocks 客户端（Ubuntu）', link: '/programming/shadowsocks-ubuntu-client' },
+            { text: 'Jenkins Docker 代理配置', link: '/programming/jenkins-docker-proxy' },
           ]
         }
       ],

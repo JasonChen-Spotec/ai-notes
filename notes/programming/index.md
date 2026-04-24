@@ -5,3 +5,4 @@
 - [Nginx 指定 API 不记录日志](./nginx-disable-log-for-specific-api)
 - [Nginx 多环境配置生成器](./nginx-multi-env-config-generator)
 - [Shadowsocks 客户端（Ubuntu）](./shadowsocks-ubuntu-client)
+- [Jenkins Docker 代理配置](./jenkins-docker-proxy)
