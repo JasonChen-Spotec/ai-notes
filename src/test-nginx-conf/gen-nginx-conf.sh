@@ -31,7 +31,7 @@ cat > "$TMP" << 'NGINX_TEMPLATE'
 server {
   listen 80;
   server_name api.spotecreadonly14.net api.spotec14.net.au api.spotec14.net api.spotec14v2.net;
-  location ~ /api/(ib|app|client|h5|third|home)/ {
+  location ~ /api/(ib|app|client|h5|third|home|landingPage)/ {
     proxy_pass http://127.0.0.1:31000;
     proxy_set_header X-Client-IP $remote_addr;
     proxy_set_header Upgrade $http_upgrade;
