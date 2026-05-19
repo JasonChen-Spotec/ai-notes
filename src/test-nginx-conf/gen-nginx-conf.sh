@@ -244,6 +244,26 @@ server {
   }
 }
 
+# 推广链接、私域信号分享链接
+server {
+  listen 80;
+  server_name i.spotec14.net c.spotec14.net;
+  location ~ /api/client/ {
+    proxy_pass http://127.0.0.1:31000;
+    proxy_set_header X-Client-IP $remote_addr;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    # 从当前nginx过的流量都携带B版本,流量仅在B路线消费
+    proxy_set_header instanceVersion b;
+
+    proxy_connect_timeout 60;
+    proxy_read_timeout 600;
+  }
+}
+
 # 落地页
 server {
   listen 80;
