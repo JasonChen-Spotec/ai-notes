@@ -135,9 +135,21 @@ server {
   error_log /var/log/nginx/client-api-error.log;
 }
 
+# tmd-pc-web Nginx 配置
+# 关键改动:
+#   1. upstream 增加 max_fails / fail_timeout, 后端重启时自动摘流
+#   2. upstream 增加 keepalive 长连接池, 减少 TCP 握手开销
+#   3. proxy_next_upstream 在后端 5xx/超时时自动切到另一台
+#   4. 健康检查依赖 /api/health (deploy.sh 使用)
+
 upstream client-site {
-  server localhost:9030;
-  server localhost:9080;
+  server localhost:9030 max_fails=2 fail_timeout=30s;
+  server localhost:9080 max_fails=2 fail_timeout=30s;
+
+  # 长连接池: 减少与后端的 TCP 握手, 显著提升 QPS
+  keepalive 32;
+  keepalive_timeout 60s;
+  keepalive_requests 1000;
 }
 
 map $http_upgrade $connection_upgrade {
@@ -149,22 +161,43 @@ map $http_upgrade $connection_upgrade {
 server {
   server_name crm.spotecreadonly14.net crm.spotec14.net.au crm.spotec14v2.net crm.spotec14.net;
   listen 80;
+
   location / {
     proxy_intercept_errors on;
     proxy_pass http://client-site;
 
+    # 后端 5xx / 超时 / 连接错误时自动切到下一台 upstream
+    # 实现真正的无缝发布: 即使一个后端在 reload 期间短暂不可用, 用户也无感知
+    proxy_next_upstream error timeout http_502 http_503 http_504;
+    proxy_next_upstream_tries 2;
+    proxy_next_upstream_timeout 10s;
+
     proxy_http_version 1.1;
+    # 配合 upstream keepalive 必须清空 Connection 头
+    proxy_set_header Connection $connection_upgrade;
+
     proxy_set_header Host $host;
     proxy_set_header X-Client-IP $remote_addr;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
     proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection $connection_upgrade;
 
     proxy_connect_timeout 5s;
     proxy_send_timeout 30s;
     proxy_read_timeout 30s;
+  }
+
+  # 健康检查接口直通后端 (用于 deploy.sh 的健康探测)
+  # 单独 location 便于 access_log 关闭, 不污染业务日志
+  location = /api/health {
+    access_log off;
+    proxy_pass http://client-site;
+    proxy_http_version 1.1;
+    proxy_set_header Connection "";
+    proxy_set_header Host $host;
+    proxy_connect_timeout 2s;
+    proxy_read_timeout 3s;
   }
 
   location = /robots.txt {
@@ -181,9 +214,6 @@ server {
   location = /50x.html {
     root /etc/nginx/error_page;
   }
-
-  access_log /var/log/nginx/pc-web.log combined;
-  error_log /var/log/nginx/pc-web-error.log;
 }
 
 # 代理服务

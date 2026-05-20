@@ -199,6 +199,15 @@ display acl 3088
 display acl 3087
 ```
 
+## 删除一条规则
+```
+system-view
+acl number 3089
+undo rule 15
+quit
+save
+y
+```
 ## 回滚
 
 ```
