@@ -277,7 +277,7 @@ server {
 # 推广链接、私域信号分享链接
 server {
   listen 80;
-  server_name i.spotec14.net c.spotec14.net;
+  server_name i.spotec14.net i.spotec14v2.net;
   location ~ /api/client/ {
     proxy_pass http://127.0.0.1:31000;
     proxy_set_header X-Client-IP $remote_addr;
