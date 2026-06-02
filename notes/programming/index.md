@@ -6,3 +6,4 @@
 - [Nginx 多环境配置生成器](./nginx-multi-env-config-generator)
 - [Shadowsocks 客户端（Ubuntu）](./shadowsocks-ubuntu-client)
 - [Jenkins Docker 代理配置](./jenkins-docker-proxy)
+- [TIME_WAIT 排查与 Nginx upstream keepalive 修复](./nginx-time-wait-diagnosis)
