@@ -263,4 +263,4 @@ sudo ss -nt '( dport = :31000 )' | wc -l
 ### 8.6 后续待办
 
 - `:9080` `:9030`（PM2 / Node）也是同一份 nginx.conf 反代过来的，同样问题，按相同套路补 upstream + keepalive
-- `:9010`（Next.js）的 10 个 TIME_WAIT 量小可暂不处理
+- `:9010`（Next.js）的 10 个 TIME_WAIT 量小可暂不处理.
