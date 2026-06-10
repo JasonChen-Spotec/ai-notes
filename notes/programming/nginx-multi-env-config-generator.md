@@ -30,7 +30,8 @@ source: Claude Code 对话
 **在 192.168.0.132 上启动 HTTP 服务**（只需一次, 目前用 nginx）：
 ```bash
 server {
-  listen 6666;
+  listen 80;
+  server_name tool.cdspotec.net;
   index index.html ;
   root /data/fee/application/tools;
   try_files $uri $uri/ /index.html;
@@ -40,7 +41,7 @@ server {
 **在目标机器上执行**：
 ```bash
 # 下载脚本
-curl -O http://192.168.0.132:6666/gen-nginx-conf.sh
+curl -O http://tool.cdspotec.net/gen-nginx-conf.sh
 
 # 授权执行
 chmod +x gen-nginx-conf.sh
