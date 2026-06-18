@@ -7,3 +7,4 @@
 - [Shadowsocks 客户端（Ubuntu）](./shadowsocks-ubuntu-client)
 - [Jenkins Docker 代理配置](./jenkins-docker-proxy)
 - [TIME_WAIT 排查与 Nginx upstream keepalive 修复](./nginx-time-wait-diagnosis)
+- [Windows 10 家庭版开放端口允许其他电脑访问](./windows10-open-port)

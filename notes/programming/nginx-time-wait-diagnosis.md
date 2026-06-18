@@ -263,4 +263,62 @@ sudo ss -nt '( dport = :31000 )' | wc -l
 ### 8.6 后续待办
 
 - `:9080` `:9030`（PM2 / Node）也是同一份 nginx.conf 反代过来的，同样问题，按相同套路补 upstream + keepalive
-- `:9010`（Next.js）的 10 个 TIME_WAIT 量小可暂不处理.
+- `:9010`（Next.js）的 10 个 TIME_WAIT 量小可暂不处理
+
+## 9. 附：查看连接数是哪个进程引起的
+
+### 9.1 按进程聚合所有当前连接数
+
+```bash
+sudo ss -tnp | awk '{print $NF}' | grep -oP 'users:\(\("\K[^"]+' | sort | uniq -c | sort -nr
+```
+
+### 9.2 按进程统计 ESTABLISHED 连接数（推断 TIME_WAIT 来源）
+
+TIME_WAIT 时进程已释放连接，PID 无法直接看到。通过看哪个进程有大量 ESTABLISHED 连接来推断：
+
+```bash
+sudo ss -tnp state established | awk '{print $NF}' | grep -oP 'users:\(\("\K[^"]+' | sort | uniq -c | sort -nr
+```
+
+### 9.3 精确到 PID + 进程名 + 连接数（最完整）
+
+```bash
+sudo ss -tnp | grep -oP 'pid=\K\d+' | sort | uniq -c | sort -nr | while read cnt pid; do
+  name=$(cat /proc/$pid/cmdline 2>/dev/null | tr '\0' ' ' | cut -c1-60)
+  echo "$cnt $pid $name"
+done
+```
+
+### 9.4 查某个端口的连接来自哪些进程
+
+```bash
+# 看谁在连 31000
+sudo ss -tnp '( dport = :31000 )' | awk '{print $NF}' | sort | uniq -c | sort -nr
+
+# 同时看多个端口
+sudo ss -tnp '( dport = :9080 or dport = :9030 )' | awk '{print $NF}' | sort | uniq -c | sort -nr
+```
+
+### 9.5 实时按进程看流量（nethogs）
+
+```bash
+sudo apt install nethogs -y
+sudo nethogs lo      # 本地回环
+sudo nethogs eth0    # 外网网卡
+```
+
+### 9.6 关于 TIME_WAIT 长尾现象
+
+第一个命令按目标 IP 聚合时，127.0.0.1 的计数远大于第二个命令按端口聚合的 `head` 前 10 行之和。
+原因：高位临时端口（ephemeral port，5 万多段）每个只有 1-2 条，但数量极多，被 `head` 截断。
+
+```bash
+# 验证：计算 127.0.0.1 TIME_WAIT 所有端口的实际总数
+netstat -ant | grep TIME_WAIT | grep 127.0.0.1 | awk '{print $5}' | sort | uniq -c | awk '{sum+=$1} END{print sum}'
+
+# 看一共有多少个不同的目标端口
+netstat -ant | grep TIME_WAIT | grep 127.0.0.1 | awk '{print $5}' | sort | uniq -c | sort -nr | wc -l
+```
+
+高位临时端口段的长尾属于正常背景噪声（出站连接关闭后留下），无需处理。
