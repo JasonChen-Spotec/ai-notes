@@ -31,7 +31,7 @@ cat > "$TMP" << 'NGINX_TEMPLATE'
 server {
   listen 80;
   server_name api.spotecreadonly14.net api.spotec14.net.au api.spotec14.net api.spotec14v2.net;
-  location ~ /api/(ib|app|client|h5|third|home|landingPage)/ {
+  location ~ /api/(be|ib|app|client|h5|third|home|landingPage)/ {
     proxy_pass http://127.0.0.1:31000;
     proxy_set_header X-Client-IP $remote_addr;
     proxy_set_header Upgrade $http_upgrade;
@@ -222,6 +222,15 @@ server {
   server_name ib.spotecreadonly14.net ib.spotec14v2.net ib.spotec14.net ib.spotec14.net.au;
   index index.html index.htm default.php default.htm default.html;
   root /data/fee/application/tmd-IB-web/current;
+  try_files $uri $uri/ /index.html;
+}
+
+# 管理端
+server {
+  listen 80;
+  server_name admin.spotec14v2.net admin.spotec14.net admin.spotec14.net.au;
+  index  index.html index.htm default.php default.htm default.html;
+  root /data/fee/application/tmd-admin/current;
   try_files $uri $uri/ /index.html;
 }
 
