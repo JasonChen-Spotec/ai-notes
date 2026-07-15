@@ -84,3 +84,32 @@ source ~/.bashrc
 **症状**：`curl -v` 显示 `locally resolved`，IP 解析到 Twitter 等无关服务器，TLS 握手超时。
 
 **解决**：将 `socks5://` 改为 `socks5h://`。
+
+## 转成 HTTP/HTTPS 代理（给不支持 SOCKS5 的程序用）
+
+部分工具（如某些 GUI 程序、旧版 wget/apt）只认 HTTP/HTTPS 代理，不认 SOCKS5，需要用 `privoxy` 做一层转发。
+
+```bash
+sudo apt install privoxy
+```
+
+追加转发规则（快速写入，等价于手动编辑 `/etc/privoxy/config` 末尾加一行）：
+
+```bash
+echo "forward-socks5t / 127.0.0.1:1087 ." | sudo tee -a /etc/privoxy/config
+```
+
+重启服务：
+
+```bash
+sudo systemctl restart privoxy
+```
+
+默认监听 `127.0.0.1:8118`，即为 HTTP/HTTPS 代理地址：
+
+```bash
+export http_proxy=http://127.0.0.1:8118
+export https_proxy=http://127.0.0.1:8118
+```
+
+**注意**：规则用 `forward-socks5t`（末尾带 `t`），表示域名解析交给 SOCKS5 代理端处理，效果等同于 `socks5h://`，避免 DNS 污染。不要写成不带 `t` 的 `forward-socks5`。
