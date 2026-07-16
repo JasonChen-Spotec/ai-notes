@@ -14,6 +14,24 @@ source: Claude Code 对话
 
 免密账号配置见 [Ansible 批量运维 SSH 免密配置（ops_nexus 账号）](./ansible-ops-nexus-ssh-setup)。
 
+## 流程图
+
+```mermaid
+flowchart TD
+    A[安装 Ansible 控制端] --> B[配置 ops_nexus SSH 免密]
+    B --> C{目标机器是否重装过?}
+    C -- 是 --> D["清除旧指纹<br/>ssh-keygen -R 目标IP"]
+    D --> E[写入/确认 authorized_keys]
+    C -- 否 --> E
+    E --> F[编写 inventory.ini<br/>host + param 映射]
+    F --> G[编写 playbook.yml]
+    G --> H["执行 ansible-playbook -u ops_nexus"]
+    H --> I[目标机: 下载 gen-nginx-conf.sh]
+    I --> J[目标机: chmod +x]
+    J --> K["目标机: sudo ./gen-nginx-conf.sh 参数"]
+    K --> L[汇总各主机执行结果]
+```
+
 ## 安装 Ansible
 
 Ubuntu / Debian：
