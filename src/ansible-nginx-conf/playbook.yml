@@ -1,0 +1,18 @@
+---
+- hosts: nginx_gen
+  become: true
+  tasks:
+    - name: 下载 gen-nginx-conf.sh
+      get_url:
+        url: http://tool.cdspotec.net/gen-nginx-conf.sh
+        dest: /tmp/gen-nginx-conf.sh
+        mode: "0755"
+        force: true
+
+    - name: 执行 gen-nginx-conf.sh
+      command: /tmp/gen-nginx-conf.sh {{ param }}
+      register: result
+
+    - name: 输出执行结果
+      debug:
+        var: result.stdout_lines
