@@ -9,5 +9,5 @@
 - [Jenkins Docker 代理配置](./jenkins-docker-proxy)
 - [TIME_WAIT 排查与 Nginx upstream keepalive 修复](./nginx-time-wait-diagnosis)
 - [Windows 10 家庭版开放端口允许其他电脑访问](./windows10-open-port)
-- [Ansible 批量运维 SSH 免密配置（ops_nexus 账号）](./ansible-ops-nexus-ssh-setup)
-- [Ansible 批量生成 Nginx 多环境配置（安装 + 执行）](./ansible-nginx-conf-deploy)
+- [Ansible 批量运维 SSH 免密配置（ops_nexus 账号）up](./ansible-ops-nexus-ssh-setup)
+- [Ansible 批量生成 Nginx 多环境配置（安装 + 执行）up](./ansible-nginx-conf-deploy)
