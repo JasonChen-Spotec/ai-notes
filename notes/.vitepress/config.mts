@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
+import { withMermaid } from 'vitepress-plugin-mermaid'
 
-export default defineConfig({
+export default withMermaid(defineConfig({
   title: '知识库',
   description: 'AI 对话知识归档',
   lang: 'zh-CN',
@@ -56,4 +57,8 @@ export default defineConfig({
       next: '下一篇',
     },
   },
-})
+
+  mermaid: {
+    // mermaid 初始化选项,留空用默认
+  },
+}))
