@@ -10,7 +10,7 @@ source: Claude Code 对话
 ## 结论
 
 用 Ansible 批量对多台服务器执行 `gen-nginx-conf.sh`，每台机器参数不同（IP 最后一段），
-配置文件在 [src/ansible-nginx-conf/](../../src/ansible-nginx-conf/)。
+配置文件在 `src/ansible-nginx-conf/` 目录下。
 
 免密账号配置见 [Ansible 批量运维 SSH 免密配置（ops_nexus 账号）](./ansible-ops-nexus-ssh-setup)。
 

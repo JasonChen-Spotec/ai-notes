@@ -58,4 +58,4 @@ ssh-keygen -f '/home/ops_nexus/.ssh/known_hosts' -R '192.168.0.129'
 
 ## 关联
 
-- 批量执行脚本参考 [Nginx 多环境配置生成器](./nginx-multi-env-config-generator)（[src/ansible-nginx-conf/](../../src/ansible-nginx-conf/) 下的 inventory + playbook）
+- 批量执行脚本参考 [Ansible 批量生成 Nginx 多环境配置](./ansible-nginx-conf-deploy)（inventory + playbook 详见该笔记）
