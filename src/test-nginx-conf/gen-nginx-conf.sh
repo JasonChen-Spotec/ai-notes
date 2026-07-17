@@ -31,7 +31,7 @@ cat > "$TMP" << 'NGINX_TEMPLATE'
 server {
   listen 80;
   server_name api.spotecreadonly14.net api.spotec14.net.au api.spotec14.net api.spotec14v2.net;
-  location ~ /api/(be|ib|app|client|h5|third|home|landingPage)/ {
+  location ~ /api/(be|ib|app|client|h5|third|home|landingPage|v3)/ {
     proxy_pass http://127.0.0.1:31000;
     proxy_set_header X-Client-IP $remote_addr;
     proxy_set_header Upgrade $http_upgrade;
@@ -271,7 +271,7 @@ server {
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_set_header Host 192.168.0.129:9000;
+    proxy_set_header Host 192.168.0.15:9000;
 
     proxy_connect_timeout 300;
     # Default is HTTP/1, keepalive is only enabled in HTTP/1.1
@@ -279,7 +279,7 @@ server {
     proxy_set_header Connection "";
     chunked_transfer_encoding off;
 
-    proxy_pass http://192.168.0.129:9000;
+    proxy_pass http://192.168.0.15:9000;
   }
 }
 
@@ -370,7 +370,7 @@ NGINX_TEMPLATE
 
 # ---------- 替换环境编号 ----------
 # 替换域名中的编号（spotec14 / spotecreadonly14 等）
-# 替换内网 IP 192.168.0.14（保留 192.168.0.129 文件服务不变）
+# 替换内网 IP 192.168.0.14（保留 192.168.0.15 文件服务不变）
 TMP2=$(mktemp /tmp/nginx-gen.XXXXXX)
 trap "rm -f $TMP $TMP2" EXIT
 sed \
