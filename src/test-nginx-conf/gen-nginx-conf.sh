@@ -219,10 +219,25 @@ server {
 # 代理服务
 server {
   listen 80;
-  server_name ib.spotecreadonly14.net ib.spotec14v2.net ib.spotec14.net ib.spotec14.net.au;
+  server_name ib.spotecreadonly14.net ib.spotec14v2.net ib.spotec14.net ib.spotec14.net.au sales.spotec14.net sales.spotec14v2.net sales.spotecreadonly14.net;
   index index.html index.htm default.php default.htm default.html;
   root /data/fee/application/tmd-IB-web/current;
-  try_files $uri $uri/ /index.html;
+
+  location ^~ /PL/ {
+    proxy_pass http://192.168.0.14:31000/api/client/pm/;
+    proxy_set_header X-Client-IP $remote_addr;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_set_header instanceVersion b;
+    # 从当前nginx过的流量都携带B版本,流量仅在B路线消费
+    proxy_connect_timeout 60;
+    proxy_read_timeout 600;
+  }
+
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
 }
 
 # 管理端
@@ -283,7 +298,7 @@ server {
   }
 }
 
-# 推广链接、私域信号分享链接
+# 私域信号分享链接
 server {
   listen 80;
   server_name i.spotec14.net i.spotec14v2.net;
